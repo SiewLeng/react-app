@@ -7,10 +7,12 @@ import {
 
 export const Home = () => {
 	const loginState = useAppSelector(selectLogin);
-
+    
+	/*
 	useEffect(()=> {
 		console.log("fired !!!",{ loginState });
 	},[loginState])
+	*/
 
 	return (
 		<div>
