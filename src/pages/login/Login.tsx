@@ -1,7 +1,4 @@
-import { monitorEventLoopDelay } from 'perf_hooks';
 import React, { useState } from 'react';
-import { textSpanContainsPosition } from 'typescript';
-import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import styles from './Login.module.css';
@@ -10,7 +7,7 @@ import {
     login,
     selectLogin 
 } from './loginSlice';
-import { render } from '@testing-library/react';
+import { store } from '../../app/store';
 
 type Props = {
 }
@@ -51,8 +48,9 @@ export const Login = () =>{
         });
     }
 
-    function seeUserData() {
+    function seeUserDataAndState() {
         console.log({ loginState });
+        console.log('store.state >>> ', store.getState());
     }
 
     return (
@@ -68,7 +66,7 @@ export const Login = () =>{
             <input type="submit" value="Submit"/>
         </form>
         <div>
-            <button onClick={seeUserData}> See User Data </button>
+            <button onClick={seeUserDataAndState}> See User Data </button>
         </div>
         <div>
             <Link to='/'> Home Page </Link>
