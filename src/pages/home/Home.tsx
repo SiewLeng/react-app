@@ -21,6 +21,7 @@ export const Home = () => {
 			<div>
 				<Link to='/counter'> Counter Page </Link>
 				<Link to='/login'> Login Page </Link>
+				<Link to='/message'> Message Page </Link>
 			</div>
 		</div>
 	)

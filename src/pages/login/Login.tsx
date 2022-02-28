@@ -27,7 +27,7 @@ export const Login = () =>{
     function handleChange(event: any) {
         const id = event.target.id;
         if (id == 'email') {
-            setEmail(event.target.value)
+            setEmail(event.target.value);
         } else if (id == 'password') {
             setPassword(event.target.value);
         }
@@ -69,7 +69,9 @@ export const Login = () =>{
             <button onClick={seeUserDataAndState}> See User Data </button>
         </div>
         <div>
-            <Link to='/'> Home Page </Link>
+            <Link to='/counter'> Counter Page </Link>
+			<Link to='/'> Home Page </Link>
+			<Link to='/message'> Message Page </Link>
         </div>
     </div>
     )
