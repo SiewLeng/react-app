@@ -1,8 +1,16 @@
 import { monitorEventLoopDelay } from 'perf_hooks';
-import React from 'react';
+import React, { useState } from 'react';
+import { textSpanContainsPosition } from 'typescript';
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import styles from './Login.module.css';
 import client from '../../feathers';
-import { textSpanContainsPosition } from 'typescript';
+import { 
+    login,
+    selectLogin 
+} from './loginSlice';
+import { render } from '@testing-library/react';
 
 type Props = {
 }
@@ -12,50 +20,59 @@ type State = {
     password: string
 } 
 
-export class Login extends React.Component <Props, State> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            email: '',
-            password: ''
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+export const Login = () =>{
+    const dispatch = useAppDispatch();
+    const loginState = useAppSelector(selectLogin);
 
-    handleChange(event: any) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    function handleChange(event: any) {
         const id = event.target.id;
         if (id == 'email') {
-            this.setState({ email: event.target.value });
+            setEmail(event.target.value)
         } else if (id == 'password') {
-            this.setState({ password: event.target.value });
+            setPassword(event.target.value);
         }
     }
 
-    handleSubmit(event: any) {
-        console.log('this.state >>> ', this.state);
+    function handleSubmit(event: any) {
         event.preventDefault();
         client.service('users').find({
-            query: { email: this.state.email }
+            query: { email, password }
         }).then((result: any) => {
-            console.log(result);
-        })
+            const userData = {
+                email: result.data[0].email,
+                hobbies: result.data[0].hobbies,
+                dateOfBirth: result.data[0].dateOfBirth
+            }
+            console.log({ result });
+            dispatch(login(userData));
+        });
     }
 
-    render() {
-        return (
-            <div>
-                <h2>This is login page</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <label> Email: 
-                        <input type='text' value={this.state.email} onChange={this.handleChange} id='email'></input>
-                    </label>
-                    <label> Password: 
-                        <input type='text' value={this.state.password} onChange={this.handleChange} id='password'></input>
-                    </label>
-                    <input type="submit" value="Submit"/>
-                </form>
-            </div>
-        );
+    function seeUserData() {
+        console.log({ loginState });
     }
+
+    return (
+        <div>
+        <h2>This is login page</h2>
+        <form onSubmit={handleSubmit}>
+            <label> Email: 
+                <input type='text' value={email} onChange={handleChange} id='email'></input>
+            </label>
+            <label> Password: 
+                <input type='text' value={password} onChange={handleChange} id='password'></input>
+            </label>
+            <input type="submit" value="Submit"/>
+        </form>
+        <div>
+            <button onClick={seeUserData}> See User Data </button>
+        </div>
+        <div>
+            <Link to='/'> Home Page </Link>
+        </div>
+    </div>
+    )
 }
