@@ -2,11 +2,11 @@ import React, {useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { 
-    selectLogin 
+    getLoginState 
 } from '../login/loginSlice';
 
 export const Home = () => {
-	const loginState = useAppSelector(selectLogin);
+	const loginState = useAppSelector(getLoginState);
     
 	/*
 	useEffect(()=> {

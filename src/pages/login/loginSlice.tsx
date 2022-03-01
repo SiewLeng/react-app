@@ -34,7 +34,7 @@ const createSliceObj =  {
 };
 
 export const loginSlice = createSlice(createSliceObj);
-export const selectLogin = (state: RootState) => state.login;
+export const getLoginState = (state: RootState) => state.login;
 
 export const { login } = loginSlice.actions;
 export default loginSlice.reducer;

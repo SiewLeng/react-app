@@ -5,7 +5,7 @@ import styles from './Login.module.css';
 import client from '../../feathers';
 import { 
     login,
-    selectLogin 
+    getLoginState
 } from './loginSlice';
 import { store } from '../../app/store';
 
@@ -19,7 +19,7 @@ type State = {
 
 export const Login = () =>{
     const dispatch = useAppDispatch();
-    const loginState = useAppSelector(selectLogin);
+    const loginState = useAppSelector(getLoginState);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
