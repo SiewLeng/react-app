@@ -3,6 +3,7 @@ import { skipPartiallyEmittedExpressions } from 'typescript';
 import { RootState, AppThunk } from '../../app/store';
 
 type userDataType = {
+    id: string,
     email: string,
     hobbies: [string],
     dateOfBirth: Date
@@ -16,6 +17,7 @@ type intialStateType = {
 const initialState: intialStateType = {
     isLogin: false,
     userData: {
+        id: '',
         email: '',
         hobbies: ['none'],
         dateOfBirth: new Date('')

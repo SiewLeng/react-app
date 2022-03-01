@@ -39,6 +39,7 @@ export const Login = () =>{
             query: { email, password }
         }).then((result: any) => {
             const userData = {
+                id: result.data[0].id,
                 email: result.data[0].email,
                 hobbies: result.data[0].hobbies,
                 dateOfBirth: result.data[0].dateOfBirth
