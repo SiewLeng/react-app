@@ -8,9 +8,9 @@ import { getLoginState } from '../login/loginSlice';
 import { update } from './messageSlice';
 
 const LoadMessages = ({ messages }: any): any => {
-    const array = messages.map((message: any) => {
+    const array = messages.map((message: any, index: number) => {
         return (
-            <div key={message.id}>
+            <div key={index}>
                 <div>userId: {message.userId}</div>
                 <div> {message.text} </div>
             </div>
@@ -26,18 +26,53 @@ const LoadMessages = ({ messages }: any): any => {
 export const Message = () => {
     const dispatch = useAppDispatch();
     const loginState = useAppSelector(getLoginState);
+    type intialMessagesType = [] | {userId: string, text: string} [];
+    const initialMessages: intialMessagesType = [];
     const [message, setMessage] = useState('');
-    const [messages, setMessges] = useState([]);
-
+    const [messages, setMessages] = useState(initialMessages);
+    
     useEffect(() => {
         getExistingMessage();
-    });
+    }, []);
 
+    useEffect(() => {
+        listenToNewMessage();
+    }, [messages]);
+
+    function addMessage(message: any) {
+        const updatedMessages = [];
+        for (let i = 0; i < messages.length; i++) {
+            updatedMessages.push(messages[i]);
+        }
+        updatedMessages.push({
+            userId: message.userId,
+            text: message.text
+        });
+        dispatch(update(updatedMessages));
+        setMessages(updatedMessages);
+    }
+     
+    function listenToNewMessage() {
+        client.service('messages').on('created', (message: any) => {
+            addMessage(message);
+        });
+        return () => {
+            client.service('messages').removeListener('created');
+        }
+    };
+    
     function getExistingMessage () {
         client.service('messages').find()
         .then((results: any) => {
-            setMessges(results.data);
-            dispatch(update(results.data));
+            const messages = [];
+            for (let i = 0; i < results.data.length; i++) {
+                 messages.push({
+                     userId: results.data[i]['userId'],
+                     text: results.data[i]['text'],
+                 });
+            }
+            dispatch(update(messages));
+            setMessages(messages);
         }).catch((err: any) => {
         });
     }
@@ -53,8 +88,9 @@ export const Message = () => {
             id: uuidv4(),
             userId: userData.id,
             text: message
+        }).then(() => {
+            setMessage('');
         });
-        setMessage('');
     }
 
     return (
