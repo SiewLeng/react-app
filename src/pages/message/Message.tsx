@@ -60,7 +60,9 @@ export const Message = () => {
      
     function listenToNewMessage() {
         client.service('messages').on('created', (message: any) => {
-            addMessage(message);
+            if (_isMounted.current) {
+                addMessage(message);
+            }
         });
         return () => {
             client.service('messages').removeListener('created');
@@ -68,14 +70,15 @@ export const Message = () => {
     };
     
     function getExistingMessage () {
-        client.service('messages').find()
+        client.service('messages').find({ query: { num: 10 } })
         .then((results: any) => {
             if (_isMounted.current) {
                 const messages = [];
-                for (let i = 0; i < results.data.length; i++) {
+                console.log({results});
+                for (let i = 0; i < results.length; i++) {
                     messages.push({
-                        userId: results.data[i]['userId'],
-                        text: results.data[i]['text'],
+                        userId: results[i]['userId'],
+                        text: results[i]['text'],
                     });
                 }
                 dispatch(update(messages));
