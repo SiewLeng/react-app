@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import client from '../../feathers';
@@ -24,6 +24,7 @@ const LoadMessages = ({ messages }: any): any => {
 }
 
 export const Message = () => {
+    const _isMounted = useRef(true);
     const dispatch = useAppDispatch();
     const loginState = useAppSelector(getLoginState);
     type intialMessagesType = [] | {userId: string, text: string} [];
@@ -33,6 +34,11 @@ export const Message = () => {
     
     useEffect(() => {
         getExistingMessage();
+        return () => { 
+            // ComponentWillUnmount in component
+            console.log('Component has unmounted in message page');
+            _isMounted.current = false;
+        }
     }, []);
 
     useEffect(() => {
@@ -64,15 +70,17 @@ export const Message = () => {
     function getExistingMessage () {
         client.service('messages').find()
         .then((results: any) => {
-            const messages = [];
-            for (let i = 0; i < results.data.length; i++) {
-                 messages.push({
-                     userId: results.data[i]['userId'],
-                     text: results.data[i]['text'],
-                 });
-            }
-            dispatch(update(messages));
-            setMessages(messages);
+            if (_isMounted.current) {
+                const messages = [];
+                for (let i = 0; i < results.data.length; i++) {
+                    messages.push({
+                        userId: results.data[i]['userId'],
+                        text: results.data[i]['text'],
+                    });
+                }
+                dispatch(update(messages));
+                setMessages(messages);
+                }
         }).catch((err: any) => {
         });
     }

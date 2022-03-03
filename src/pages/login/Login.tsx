@@ -33,20 +33,28 @@ export const Login = () =>{
         }
     }
 
-    function handleSubmit(event: any) {
+    async function handleSubmit(event: any) {
         event.preventDefault();
-        client.service('users').find({
-            query: { email, password }
-        }).then((result: any) => {
-            const userData = {
-                id: result.data[0].id,
-                email: result.data[0].email,
-                hobbies: result.data[0].hobbies,
-                dateOfBirth: result.data[0].dateOfBirth
-            }
-            console.log({ result });
-            dispatch(login(userData));
-        });
+       try {
+            await client.reAuthenticate();
+       } catch(error) {
+            await client.authenticate({
+                strategy: 'local',
+                email,
+                password
+            }).then((result: any) => {
+                const { user } = result;
+                const userData = {
+                    id: user.id,
+                    email: user.email,
+                    hobbies: user.hobbies ? user.hobbies : [],
+                    dateOfBirth: user.dateOfBirth
+                }
+                dispatch(login(userData));
+            }).catch((err: any) => {
+                console.log(err);
+            });
+       }
     }
 
     function seeUserDataAndState() {
