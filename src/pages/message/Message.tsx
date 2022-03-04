@@ -24,6 +24,7 @@ const LoadMessages = ({ messages }: any): any => {
 }
 
 export const Message = () => {
+    const maxNumOfMess = 4;
     const _isMounted = useRef(true);
     const dispatch = useAppDispatch();
     const loginState = useAppSelector(getLoginState);
@@ -47,7 +48,8 @@ export const Message = () => {
 
     function addMessage(message: any) {
         const updatedMessages = [];
-        for (let i = 0; i < messages.length; i++) {
+        const startIndex = messages.length < maxNumOfMess ? 0 : 1;
+        for (let i = startIndex; i < messages.length; i++) {
             updatedMessages.push(messages[i]);
         }
         updatedMessages.push({
@@ -70,12 +72,14 @@ export const Message = () => {
     };
     
     function getExistingMessage () {
-        client.service('messages').find({ query: { num: 10 } })
+        client.service('messages').find({})
         .then((results: any) => {
             if (_isMounted.current) {
-                const messages = [];
                 console.log({results});
-                for (let i = 0; i < results.length; i++) {
+                const messages = [];
+                const start = results.length <= maxNumOfMess ? 
+                    0 :  results.length - maxNumOfMess;
+                for (let i = start; i < results.length; i++) {
                     messages.push({
                         userId: results[i]['userId'],
                         text: results[i]['text'],
