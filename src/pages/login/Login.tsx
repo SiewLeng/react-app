@@ -66,16 +66,18 @@ export const Login = () =>{
         <div>
         <h2>This is login page</h2>
         <form onSubmit={handleSubmit}>
-            <label> Email: 
-                <input type='text' value={email} onChange={handleChange} id='email'></input>
-            </label>
-            <label> Password: 
-                <input type='text' value={password} onChange={handleChange} id='password'></input>
-            </label>
-            <input type="submit" value="Submit"/>
+            <div className={[styles['clearfix'], styles['form-row']].join(' ')}>
+                <label className={styles['input-text-label']}> Email:</label>
+                <input className={styles['input-text']} type='text' value={email} onChange={handleChange} id='email'></input>
+            </div>
+            <div className={styles['clearfix']}>
+                <label className={styles['input-text-label']}> Password: </label>
+                <input className={styles['input-text']} type='text' value={password} onChange={handleChange} id='password'></input>
+            </div>
+            <input className={styles['button']}type="submit" value="Submit"/>
         </form>
         <div>
-            <button onClick={seeUserDataAndState}> See User Data </button>
+            <button className={styles['button']} onClick={seeUserDataAndState}> See User Data </button>
         </div>
         <div>
             <Link to='/counter'> Counter Page </Link>

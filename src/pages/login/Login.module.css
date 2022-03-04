@@ -1,0 +1,33 @@
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.form-row {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.input-text-label {
+    width: 100px;
+    display: block;
+    float: left;
+    text-align: right;
+    font-weight: bold;
+    border: 1px solid red;
+}
+
+.input-text {
+    display: block;
+    float: left;
+    margin-left: 10px;
+    padding: 5px 10px;
+}
+
+.button {
+    padding: 5px 10px;
+    margin: 5px 10px; 
+    font-weight: bold;
+    cursor: pointer;
+}

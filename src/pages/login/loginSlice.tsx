@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { skipPartiallyEmittedExpressions } from 'typescript';
 import { RootState, AppThunk } from '../../app/store';
 
 type userDataType = {
